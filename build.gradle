@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.hyperion'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Compatible with a number of Gradle APIs that accept a java.io.File
+Provider<Directory> buildDir = layout.buildDirectory.dir("libs")
+File archiveLocation = file("${projectDir}\\archive\\jar\\")
+File utilityLocation = file("C:\\IntelliJ Workspace\\UtilityJars")
+
+// Configure the main jar task
+jar {
+    archiveBaseName.set('SqlBuilder')
+    archiveVersion.set('0.1.0')
+    destinationDirectory.set(buildDir)
+
+// Include all compile and runtime dependencies in the JAR
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+// Task to copy the JAR to the first location
+tasks.register('copyJarToFirstLocation', Copy) {
+    dependsOn jar
+    from jar
+    into archiveLocation
+}
+
+// Task to copy the JAR to the second location
+tasks.register('copyJarToSecondLocation', Copy) {
+    dependsOn jar
+    from jar
+    into utilityLocation
+}
+
+// Task that depends on the two copy tasks
+tasks.register('copyJars') {
+    dependsOn ('copyJarToFirstLocation')
+    dependsOn ('copyJarToSecondLocation')
+}
