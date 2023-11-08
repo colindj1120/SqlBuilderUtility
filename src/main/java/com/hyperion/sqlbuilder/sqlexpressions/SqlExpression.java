@@ -1,26 +1,60 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+public abstract class SqlExpression<T extends SqlExpression<T>> {
+    protected StringBuilder expression;
 
-public interface SqlExpression {
-    String render();
-    default SqlExpression as(String alias) {
-        return () -> this.render() + " AS " + alias;
+    public SqlExpression() {
+        expression = new StringBuilder();
     }
 
-    default SqlExpression correlation(String correlation) {return () -> this.render() + " " + correlation; }
+    public String render() {
+        return expression.toString();
+    }
+
+    public T as(String alias) {
+        unsupportedAs(self());
+        return self();
+    }
+
+    protected void unsupportedAs(T clazz) {
+        throw new UnsupportedOperationException(String.format("%s operation does not support AS alias", clazz.getClass()
+                                                                                                             .getSimpleName()));
+    }
+
+    protected abstract T self();
+
+    public T correlation(String correlation) {
+        unsupportedCorrelation(self());
+        return self();
+    }
+
+    protected void unsupportedCorrelation(T clazz) {
+        throw new UnsupportedOperationException(String.format("%s operation does not support a correlation alias", clazz.getClass()
+                                                                                                                        .getSimpleName()));
+    }
+
+    public T tableReference(String tableName) {
+        unsupportedTableReference(self());
+        return self();
+    }
+
+    protected void unsupportedTableReference(T clazz) {
+        throw new UnsupportedOperationException(String.format("%s operation does not support a table reference", clazz.getClass()
+                                                                                                                      .getSimpleName()));
+    }
+
+//    default SqlExpression as(String alias) {
+//        return () -> String.format("%s AS %s", this.render(), alias);
+//    }
+
+//    default SqlExpression correlation(String correlation)  {
+//        return () -> String.format("%s %s", this.render(), correlation);
+//    }
+//
+//    default SqlExpression tableReference(String tableName) {
+//        return () -> String.format("%s.%s", tableName, this.render());
+//    }
 
     // Static method to represent all columns
-    static SqlExpression allColumns() {
-        return () -> "*";
-    }
-    // Static method for DISTINCT
-    static SqlExpression distinct(SqlExpression... expressions) {
-        String renderedExpressions = Stream.of(expressions)
-                                           .map(SqlExpression::render)
-                                           .collect(Collectors.joining(", "));
-        return () -> "DISTINCT " + renderedExpressions;
-    }
 }
 

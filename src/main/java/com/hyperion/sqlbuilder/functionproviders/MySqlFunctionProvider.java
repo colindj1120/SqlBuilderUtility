@@ -1,14 +1,10 @@
 package com.hyperion.sqlbuilder.functionproviders;
 
-import com.hyperion.sqlbuilder.builders.MySqlBuilder;
-import com.hyperion.sqlbuilder.sqlexpressions.SqlExpression;
-
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import static com.hyperion.sqlbuilder.functionproviders.ArgsUtility.buildArgsString;
 
 public class MySqlFunctionProvider {
-    public static SqlFunctionProvider<MySqlBuilder> count() {
-        return args -> () -> "COUNT(" + Stream.of(args).map(SqlExpression::render).collect(Collectors.joining(", ")) + ")";
+    public static SqlFunctionProvider count() {
+        return args -> String.format("COUNT(%s)", buildArgsString(args));
     }
     // ... other MySQL-specific functions
 }

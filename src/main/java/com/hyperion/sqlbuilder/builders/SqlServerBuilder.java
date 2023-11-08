@@ -11,7 +11,8 @@ public class SqlServerBuilder extends SqlBuilder<SqlServerBuilder> {
     }
 
     public SqlServerBuilder nextValueFor(String sequenceName) {
-        builder.append("NEXT VALUE FOR ").append(sequenceName);
+        builder.append("NEXT VALUE FOR ")
+               .append(sequenceName);
         return this;
     }
 

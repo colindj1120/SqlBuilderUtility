@@ -21,4 +21,4 @@ public enum DerbySpecificJoin implements JoinDefinition {
     public String getSql() {
         return sql;
     }
-    }
+}

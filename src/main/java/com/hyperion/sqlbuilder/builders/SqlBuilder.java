@@ -29,11 +29,18 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     //TODO: CREATE TABLE "" AS (subquery) WITH NO DATA (derby specific maybe)
-    public T createTable(String tableName) {
+    public T createTable(Table tableName) {
         builder.append("CREATE TABLE ")
-               .append(tableName);
+               .append(tableName.render());
         return self();
     }
+
+    /**
+     * Method used internally to cast the current instance to the type T.
+     *
+     * @return the current instance cast to type T
+     */
+    protected abstract T self();
 
     public T endTable() {
         builder.append("\n)");
@@ -42,16 +49,21 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
 
     // Method to select all columns
     public T selectAll() {
-        return select(SqlExpression.allColumns());
-    }
-
-    // Method to select distinct columns or expressions
-    public T selectDistinct(SqlExpression... expressions) {
-        return select(SqlExpression.distinct(expressions));
+        return select(Column.all());
     }
 
     public T select(SqlExpression... expressions) {
         builder.append("SELECT ");
+        String renderedExpressions = Stream.of(expressions)
+                                           .map(SqlExpression::render)
+                                           .collect(Collectors.joining(", "));
+        builder.append(renderedExpressions);
+        return self();
+    }
+
+    // Method to select distinct columns or expressions
+    public T selectDistinct(SqlExpression... expressions) {
+        builder.append("SELECT DISTINCT ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
                                            .collect(Collectors.joining(", "));
@@ -67,9 +79,9 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
      *
      * @return the current instance of the SQL builder for method chaining
      */
-    public T from(String table) {
+    public T from(Table table) {
         builder.append(" FROM ")
-               .append(table);
+               .append(table.render());
         return self();
     }
 
@@ -89,10 +101,12 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T using(String... columns) {
+    public T using(Column... columns) {
         if (columns != null && columns.length > 0) {
             builder.append(" USING (")
-                   .append(String.join(", ", columns))
+                   .append(Arrays.stream(columns)
+                                 .map(Column::render)
+                                 .collect(Collectors.joining(", ")))
                    .append(")");
         }
         return self();
@@ -115,16 +129,20 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     // Method for GROUP BY clause
-    public T groupBy(String... columns) {
+    public T groupBy(Column... columns) {
         builder.append(" GROUP BY ")
-               .append(String.join(", ", columns));
+               .append(Arrays.stream(columns)
+                             .map(Column::render)
+                             .collect(Collectors.joining(", ")));
         return self();
     }
 
     // Method for GROUP BY with ROLLUP (if supported by the DBMS)
-    public T groupByRollup(String... columns) {
+    public T groupByRollup(Column... columns) {
         builder.append(" GROUP BY ROLLUP (")
-               .append(String.join(", ", columns))
+               .append(Arrays.stream(columns)
+                             .map(Column::render)
+                             .collect(Collectors.joining(", ")))
                .append(")");
         return self();
     }
@@ -160,21 +178,21 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     // Method to construct a DELETE statement
-    public T deleteFrom(ColumnExpression table) {
+    public T deleteFrom(Table table) {
         builder.append("DELETE FROM ")
-               .append(table);
+               .append(table.render());
         return self();
     }
 
     // Method to construct an UPDATE statement
-    public T update(ColumnExpression table) {
+    public T update(Table table) {
         builder.append("UPDATE ")
                .append(table.render());
         return self();
     }
 
     // Method to set values for an UPDATE statement
-    public T set(UpdateExpression... expressions) {
+    public T set(SetColumn... expressions) {
         builder.append(" SET ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
@@ -183,12 +201,14 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T insertInto(String tableName, String... columns) {
+    public T insertInto(Table tableName, Column... columns) {
         builder.append("INSERT INTO ")
-               .append(tableName);
+               .append(tableName.render());
         if (columns.length > 0) {
             builder.append(" (")
-                   .append(String.join(", ", columns))
+                   .append(Arrays.stream(columns)
+                                 .map(Column::render)
+                                 .collect(Collectors.joining(", ")))
                    .append(")");
         }
         return self();
@@ -199,22 +219,22 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T subqueryValue(SubqueryExpression expression) {
+    public T subqueryValue(Subquery expression) {
         builder.append(" VALUES ")
                .append(expression.render());
         return self();
     }
 
-    public T values(ConstantExpression... expressions) {
+    public T values(Constant... expressions) {
         builder.append(" VALUES ");
         String valueString = String.format("(%s)", Arrays.stream(expressions)
-                                                         .map(ConstantExpression::render)
+                                                         .map(Constant::render)
                                                          .collect(Collectors.joining(", ")));
         builder.append(valueString);
         return self();
     }
 
-    public T groupedValues(ConstantExpression[]... expressions) {
+    public T groupedValues(Constant[]... expressions) {
         builder.append(" VALUES ");
         String valueString = String.format("(%s)", Arrays.stream(expressions)
                                                          .map(expression -> String.format("(%s)", Arrays.stream(expression)
@@ -224,13 +244,6 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         builder.append(valueString);
         return self();
     }
-
-    /**
-     * Method used internally to cast the current instance to the type T.
-     *
-     * @return the current instance cast to type T
-     */
-    protected abstract T self();
 
     /**
      * Builds the final SQL query string.

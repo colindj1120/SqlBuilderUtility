@@ -6,28 +6,16 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class DerbyConstraint {
-    public enum Type {
-        PRIMARY_KEY,
-        UNIQUE,
-        NOT_NULL,
-        CHECK,
-        FOREIGN_KEY,
-        DEFAULT,
-        WITH_DEFAULT,
-        GENERATED_ALWAYS_AS_IDENTITY,
-        GENERATED_BY_DEFAULT_AS_IDENTITY,
-        GENERATED_ALWAYS_AS
-    }
-
-    // Factory method for creating a new DerbyConstraint instance
-    public static DerbyConstraint create(Type type) {
-        return new DerbyConstraint(type.name().replace("_", " "));
-    }
-
     private String constraint;
 
     private DerbyConstraint(String constraint) {
         this.constraint = constraint;
+    }
+
+    // Factory method for creating a new DerbyConstraint instance
+    public static DerbyConstraint create(Type type) {
+        return new DerbyConstraint(type.name()
+                                       .replace("_", " "));
     }
 
     public String toString() {
@@ -75,5 +63,18 @@ public class DerbyConstraint {
     public DerbyConstraint startsWithIncrementBy(int start, int increment) {
         constraint += String.format("(STARTS WITH %d, INCREMENT BY %d)", start, increment);
         return this;
+    }
+
+    public enum Type {
+        PRIMARY_KEY,
+        UNIQUE,
+        NOT_NULL,
+        CHECK,
+        FOREIGN_KEY,
+        DEFAULT,
+        WITH_DEFAULT,
+        GENERATED_ALWAYS_AS_IDENTITY,
+        GENERATED_BY_DEFAULT_AS_IDENTITY,
+        GENERATED_ALWAYS_AS
     }
 }

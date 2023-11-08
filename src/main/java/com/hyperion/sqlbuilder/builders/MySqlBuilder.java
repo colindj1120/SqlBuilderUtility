@@ -1,11 +1,10 @@
 package com.hyperion.sqlbuilder.builders;
 
 /**
- * Concrete implementation of SqlBuilder for MySQL.
- * This class extends the generic SqlBuilder to provide MySQL-specific SQL building capabilities.
+ * Concrete implementation of SqlBuilder for MySQL. This class extends the generic SqlBuilder to provide MySQL-specific SQL building capabilities.
  *
- * @version 1.0
  * @author Colin Jokisch
+ * @version 1.0
  */
 public class MySqlBuilder extends SqlBuilder<MySqlBuilder> {
 
@@ -29,11 +28,14 @@ public class MySqlBuilder extends SqlBuilder<MySqlBuilder> {
     /**
      * Appends a LIMIT clause to the SQL query.
      *
-     * @param limit the maximum number of rows to return
+     * @param limit
+     *         the maximum number of rows to return
+     *
      * @return the current instance of the SQL builder for method chaining
      */
     public MySqlBuilder limit(int limit) {
-        builder.append(" LIMIT ").append(limit);
+        builder.append(" LIMIT ")
+               .append(limit);
         return this;
     }
 

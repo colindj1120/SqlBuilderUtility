@@ -1,16 +1,38 @@
 package com.hyperion.sqlbuilder.datatypes.ApacheDerby;
 
 public class DerbyDataType {
+    private final String dataType;
+
+    private DerbyDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    private DerbyDataType(String dataType, int length) {
+        this.dataType = String.format("%s(%d)", dataType, length);
+    }
+
+    private DerbyDataType(String dataType, int precision, int scale) {
+        this.dataType = String.format("%s(%d, %d)", dataType, precision, scale);
+    }
+
     public static DerbyDataType dataType(DataType type) {
-        return new DerbyDataType(type.name().replace("_", " "));
+        return new DerbyDataType(type.name()
+                                     .replace("_", " "));
     }
 
     public static DerbyDataType dataTypeWithLength(DataType type, int length) {
-        return new DerbyDataType(type.name().replace("_", " "), length);
+        return new DerbyDataType(type.name()
+                                     .replace("_", " "), length);
     }
 
     public static DerbyDataType dataTypeWithPrecisionAndScale(DataType type, int precision, int scale) {
-        return new DerbyDataType(type.name().replace("_", " "), precision, scale);
+        return new DerbyDataType(type.name()
+                                     .replace("_", " "), precision, scale);
+    }
+
+    @Override
+    public String toString() {
+        return dataType;
     }
 
     public enum DataType {
@@ -54,25 +76,6 @@ public class DerbyDataType {
         // Others
         BOOLEAN,
         XML
-    }
-
-    private final String dataType;
-
-    private DerbyDataType(String dataType) {
-        this.dataType = dataType;
-    }
-
-    private DerbyDataType(String dataType, int length) {
-        this.dataType = String.format("%s(%d)", dataType, length);
-    }
-
-    private DerbyDataType(String dataType, int precision, int scale) {
-        this.dataType = String.format("%s(%d, %d)", dataType, precision, scale);
-    }
-
-    @Override
-    public String toString() {
-        return dataType;
     }
 }
 

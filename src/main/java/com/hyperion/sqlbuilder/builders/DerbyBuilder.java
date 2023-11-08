@@ -2,13 +2,16 @@ package com.hyperion.sqlbuilder.builders;
 
 import com.hyperion.sqlbuilder.datatypes.ApacheDerby.DerbyConstraint;
 import com.hyperion.sqlbuilder.datatypes.ApacheDerby.DerbyDataType;
+import com.hyperion.sqlbuilder.sqlexpressions.Column;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
- * Concrete implementation of SqlBuilder for Apache Derby.
- * This class extends the generic SqlBuilder to provide Derby-specific SQL building capabilities.
+ * Concrete implementation of SqlBuilder for Apache Derby. This class extends the generic SqlBuilder to provide Derby-specific SQL building capabilities.
  *
- * @version 1.0
  * @author Colin Jokisch
+ * @version 1.0
  */
 public class DerbyBuilder extends SqlBuilder<DerbyBuilder> {
 
@@ -29,46 +32,58 @@ public class DerbyBuilder extends SqlBuilder<DerbyBuilder> {
         return this;
     }
 
-    public DerbyBuilder addColumn(String name, DerbyDataType type, DerbyConstraint... constraints) {
+    public DerbyBuilder createColumn(String name, DerbyDataType type, DerbyConstraint... constraints) {
         if (builder.lastIndexOf("(\n") != builder.length() - 2 && builder.lastIndexOf("(\n") != -1) {
             builder.append(",\n");
         } else {
             builder.append(" (\n");
         }
-        builder.append("\t").append(name).append(" ").append(type.toString());
+        builder.append("\t")
+               .append(name)
+               .append(" ")
+               .append(type.toString());
 
-        for (DerbyConstraint constraint : constraints) {
-            builder.append(" ").append(constraint.toString());
-        }
+        Arrays.stream(constraints)
+              .forEach(constraint -> builder.append(" ")
+                                            .append(constraint.toString()));
         return this;
     }
 
     public DerbyBuilder addConstraint(DerbyConstraint constraint) {
-        builder.append(",\n\t").append(constraint.toString());
+        builder.append(",\n\t")
+               .append(constraint.toString());
         return this;
     }
 
     /**
      * Appends a NEXT VALUE FOR clause for a sequence in an SQL statement.
      *
-     * @param sequenceName the name of the sequence
+     * @param sequenceName
+     *         the name of the sequence
+     *
      * @return the current instance of the SQL builder for method chaining
      */
     public DerbyBuilder nextValueFor(String sequenceName) {
-        builder.append("NEXT VALUE FOR ").append(sequenceName);
+        builder.append("NEXT VALUE FOR ")
+               .append(sequenceName);
         return this;
     }
 
     /**
      * Appends a FOR UPDATE clause to the SQL query, optionally specifying columns.
      *
-     * @param columns the columns to be updated, varargs to allow specifying multiple columns
+     * @param columns
+     *         the columns to be updated, varargs to allow specifying multiple columns
+     *
      * @return the current instance of the SQL builder for method chaining
      */
-    public DerbyBuilder forUpdate(String... columns) {
+    public DerbyBuilder forUpdate(Column... columns) {
         builder.append(" FOR UPDATE");
         if (columns.length > 0) {
-            builder.append(" OF ").append(String.join(", ", columns));
+            builder.append(" OF ")
+                   .append(Arrays.stream(columns)
+                                 .map(Column::render)
+                                 .collect(Collectors.joining(", ")));
         }
         return this;
     }

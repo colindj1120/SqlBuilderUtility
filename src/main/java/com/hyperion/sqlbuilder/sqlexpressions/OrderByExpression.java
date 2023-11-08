@@ -1,21 +1,14 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
+
 import com.hyperion.sqlbuilder.datatypes.SqlStandard.SortOrder;
 
-//This doesn't implement SqlExpression because its specific to ORDER BY clause
-public class OrderByExpression {
-    private final String    column;
-    private final SortOrder sortOrder;
-
-    public OrderByExpression(String column, SortOrder sortOrder) {
-        this.column = column;
-        this.sortOrder = sortOrder;
+public class OrderByExpression extends SqlExpression<OrderByExpression> {
+    private OrderByExpression(String column, SortOrder sortOrder) {
+        super();
+        this.expression.append(column)
+                       .append(sortOrder == SortOrder.NONE ? "" : String.format(" %s", sortOrder.name()));
     }
 
-    public String render() {
-        return column + (sortOrder == SortOrder.NONE ? "" : " " + sortOrder);
-    }
-
-    // Static factory methods for convenience
     public static OrderByExpression asc(String column) {
         return new OrderByExpression(column, SortOrder.ASC);
     }
@@ -26,6 +19,11 @@ public class OrderByExpression {
 
     public static OrderByExpression col(String column) {
         return new OrderByExpression(column, SortOrder.NONE);
+    }
+
+    @Override
+    protected OrderByExpression self() {
+        return this;
     }
 }
 
