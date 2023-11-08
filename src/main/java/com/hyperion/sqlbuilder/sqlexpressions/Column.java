@@ -23,8 +23,7 @@ public class Column extends SqlExpression<Column> {
 
     @Override
     public Column tableReference(String tableName) {
-        this.expression.append(tableName)
-                       .append(".");
+        this.expression = new StringBuilder(tableName).append(".").append(this.expression);
         return self();
     }
 
