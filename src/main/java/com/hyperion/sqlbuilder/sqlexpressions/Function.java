@@ -13,6 +13,13 @@ public class Function extends SqlExpression<Function> {
     }
 
     @Override
+    public Function as(String alias) {
+        this.expression.append(" AS ")
+                       .append(alias);
+        return self();
+    }
+
+    @Override
     protected Function self() {
         return this;
     }

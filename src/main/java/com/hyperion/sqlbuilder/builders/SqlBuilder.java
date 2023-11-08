@@ -52,21 +52,21 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return select(Column.all());
     }
 
-    public T select(SqlExpression... expressions) {
+    public T select(SqlExpression<?>... expressions) {
         builder.append("SELECT ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
-                                           .collect(Collectors.joining(", "));
+                                           .collect(Collectors.joining(",\n       "));
         builder.append(renderedExpressions);
         return self();
     }
 
     // Method to select distinct columns or expressions
-    public T selectDistinct(SqlExpression... expressions) {
+    public T selectDistinct(SqlExpression<?>... expressions) {
         builder.append("SELECT DISTINCT ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
-                                           .collect(Collectors.joining(", "));
+                                           .collect(Collectors.joining(",\n                "));
         builder.append(renderedExpressions);
         return self();
     }
@@ -80,20 +80,20 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
      * @return the current instance of the SQL builder for method chaining
      */
     public T from(Table table) {
-        builder.append(" FROM ")
+        builder.append("\nFROM ")
                .append(table.render());
         return self();
     }
 
-    public T join(JoinDefinition joinDef, SqlExpression tableExpression) {
-        builder.append(" ")
+    public T join(JoinDefinition joinDef, SqlExpression<?> tableExpression) {
+        builder.append("\n")
                .append(joinDef.getSql())
                .append(" ")
                .append(tableExpression.render());
         return self();
     }
 
-    public T on(SqlExpression joinCondition) {
+    public T on(SqlExpression<?> joinCondition) {
         if (joinCondition != null) {
             builder.append(" ON ")
                    .append(joinCondition.render());
@@ -112,15 +112,15 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T where(SqlExpression expression) {
-        builder.append(" WHERE ")
+    public T where(SqlExpression<?> expression) {
+        builder.append("\nWHERE ")
                .append(expression.render());
         return self();
     }
 
     // Method for ORDER BY clause
     public T orderBy(OrderByExpression... expressions) {
-        builder.append(" ORDER BY ");
+        builder.append("\nORDER BY ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(OrderByExpression::render)
                                            .collect(Collectors.joining(", "));
@@ -130,7 +130,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
 
     // Method for GROUP BY clause
     public T groupBy(Column... columns) {
-        builder.append(" GROUP BY ")
+        builder.append("\nGROUP BY ")
                .append(Arrays.stream(columns)
                              .map(Column::render)
                              .collect(Collectors.joining(", ")));
@@ -139,7 +139,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
 
     // Method for GROUP BY with ROLLUP (if supported by the DBMS)
     public T groupByRollup(Column... columns) {
-        builder.append(" GROUP BY ROLLUP (")
+        builder.append("\nGROUP BY ROLLUP (")
                .append(Arrays.stream(columns)
                              .map(Column::render)
                              .collect(Collectors.joining(", ")))
@@ -148,21 +148,21 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     // Method for HAVING clause
-    public T having(SqlExpression condition) {
-        builder.append(" HAVING ")
+    public T having(SqlExpression<?> condition) {
+        builder.append("\nHAVING ")
                .append(condition.render());
         return self();
     }
 
     public T offset(int offset) {
-        builder.append(" OFFSET ")
+        builder.append("\nOFFSET ")
                .append(offset)
                .append(offset == 1 ? " ROW" : " ROWS");
         return self();
     }
 
     public T fetchFirst(int rowCount) {
-        builder.append(" FETCH FIRST ")
+        builder.append("\nFETCH FIRST ")
                .append(rowCount)
                .append(rowCount == 1 ? " ROW" : " ROWS")
                .append(" ONLY");
@@ -170,7 +170,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     public T fetchNext(int rowCount) {
-        builder.append(" FETCH NEXT ")
+        builder.append("\nFETCH NEXT ")
                .append(rowCount)
                .append(rowCount == 1 ? " ROW" : " ROWS")
                .append(" ONLY");
@@ -193,10 +193,10 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
 
     // Method to set values for an UPDATE statement
     public T set(SetColumn... expressions) {
-        builder.append(" SET ");
+        builder.append("\nSET ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
-                                           .collect(Collectors.joining(", "));
+                                           .collect(Collectors.joining(",\n    "));
         builder.append(renderedExpressions);
         return self();
     }
@@ -220,13 +220,13 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     public T subqueryValue(Subquery expression) {
-        builder.append(" VALUES ")
+        builder.append("\nVALUES ")
                .append(expression.render());
         return self();
     }
 
     public T values(Constant... expressions) {
-        builder.append(" VALUES ");
+        builder.append("\nVALUES ");
         String valueString = String.format("(%s)", Arrays.stream(expressions)
                                                          .map(Constant::render)
                                                          .collect(Collectors.joining(", ")));
@@ -235,7 +235,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     public T groupedValues(Constant[]... expressions) {
-        builder.append(" VALUES ");
+        builder.append("\nVALUES ");
         String valueString = String.format("(%s)", Arrays.stream(expressions)
                                                          .map(expression -> String.format("(%s)", Arrays.stream(expression)
                                                                                                         .map(SqlExpression::render)
