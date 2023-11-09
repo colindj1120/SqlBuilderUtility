@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * @author Colin Jokisch
  * @version 1.0
  */
+@SuppressWarnings("unused")
 public class DerbyBuilder extends SqlBuilder<DerbyBuilder> {
 
     /**

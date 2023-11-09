@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * @author Colin Jokisch
  * @version 1.0
  */
-@SuppressWarnings("UnusedReturnValue")
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     protected StringBuilder builder;
 
