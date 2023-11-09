@@ -1,5 +1,6 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
+@SuppressWarnings("unused")
 public class Between extends SqlExpression<Between> {
     private final StringBuilder expression = new StringBuilder();
 
@@ -11,11 +12,11 @@ public class Between extends SqlExpression<Between> {
                        .append(endRange.render());
     }
 
-    public static Between createBetween(SqlExpression<?> expression, SqlExpression<?> startRange, SqlExpression<?> endRange) {
+    public static Between between(SqlExpression<?> expression, SqlExpression<?> startRange, SqlExpression<?> endRange) {
         return new Between(expression, startRange, endRange, false);
     }
 
-    public static Between createNotBetween(SqlExpression<?> expression, SqlExpression<?> startRange, SqlExpression<?> endRange) {
+    public static Between notBetween(SqlExpression<?> expression, SqlExpression<?> startRange, SqlExpression<?> endRange) {
         return new Between(expression, startRange, endRange, true);
     }
 

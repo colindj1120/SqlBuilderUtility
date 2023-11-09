@@ -7,30 +7,30 @@ import java.util.Optional;
 public class Column extends SqlExpression<Column> {
     private final String columnName;
     private final String alias;
-    private final String reference;
+    private final String table;
 
-    private Column(String columnName, String alias, String reference) {
+    private Column(String columnName, String alias, String table) {
         this.columnName = columnName;
-        this.alias = alias;
-        this.reference = reference;
+        this.alias      = alias;
+        this.table      = table;
     }
 
     public static Column name(String columnName) {
         return new Column(columnName, null, null);
     }
 
-    public static Column name(String columnName, String aliasOrReference, boolean isAlias) {
-        if(isAlias) {
-            return new Column(columnName, aliasOrReference, null);
-        } else {
-            return new Column(columnName, null, aliasOrReference);
-        }
+    public static Column nameWithAlias(String columnName, String alias)
+    {
+        return new Column(columnName, alias, null);
     }
 
-    public static Column name(String columnName, String alias, String reference) {
+    public static Column nameWithTable(String columnName, String table) {
+        return new Column(columnName, null, table);
+    }
+
+    public static Column nameWithAliasAndTable(String columnName, String alias, String reference) {
         return new Column(columnName, alias, reference);
     }
-
 
     public static Column all() {
         return new Column("*", null, null);
@@ -38,14 +38,18 @@ public class Column extends SqlExpression<Column> {
 
     @Override
     public String render() {
-        String render = Optional.ofNullable(reference).map(reference -> String.format("%s.%s",reference, columnName)).orElse(columnName);
-        render += Optional.ofNullable(alias).map(alias -> String.format(" AS %s", alias)).orElse("");
+        String render = Optional.ofNullable(table)
+                                .map(reference -> String.format("%s.%s", reference, columnName))
+                                .orElse(columnName);
+        render += Optional.ofNullable(alias)
+                          .map(alias -> String.format(" AS %s", alias))
+                          .orElse("");
         return render;
     }
 
     @Override
     public Column alias(String alias) {
-        return new Column(this.columnName, alias, this.reference);
+        return new Column(this.columnName, alias, this.table);
     }
 
     @Override
@@ -75,6 +79,6 @@ public class Column extends SqlExpression<Column> {
     }
 
     public Column nameWithReference() {
-        return new Column(this.columnName, null, this.reference);
+        return new Column(this.columnName, null, this.table);
     }
 }

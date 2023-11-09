@@ -1,7 +1,6 @@
 package com.hyperion.sqlbuilder.builders;
 
 import com.hyperion.sqlbuilder.datatypes.Join.JoinType;
-import com.hyperion.sqlbuilder.datatypes.JoinDefinition;
 import com.hyperion.sqlbuilder.sqlexpressions.*;
 
 import java.util.Arrays;

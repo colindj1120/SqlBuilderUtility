@@ -5,6 +5,7 @@ import com.hyperion.sqlbuilder.sqlexpressions.SqlExpression;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class DerbyConcat extends SqlExpression<DerbyConcat> {
     private final String concatenatedParts;
 
@@ -14,7 +15,7 @@ public class DerbyConcat extends SqlExpression<DerbyConcat> {
                                        .collect(Collectors.joining(" || "));
     }
 
-    public static DerbyConcat create(String... parts) {
+    public static DerbyConcat derbyConcat(String... parts) {
         return new DerbyConcat(parts);
     }
 

@@ -2,6 +2,7 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public class Subquery extends SqlExpression<Subquery> {
     private final String query;
     private final String alias;
@@ -11,11 +12,11 @@ public class Subquery extends SqlExpression<Subquery> {
         this.alias = alias;
     }
 
-    public static Subquery query(String query) {
+    public static Subquery subquery(String query) {
         return new Subquery(query, null);
     }
 
-    public static Subquery query(String query, String alias) {
+    public static Subquery subquery(String query, String alias) {
         return new Subquery(query, alias);
     }
 

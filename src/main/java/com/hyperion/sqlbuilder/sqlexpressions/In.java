@@ -15,11 +15,11 @@ public class In extends SqlExpression<In> {
         this.not = not;
     }
 
-    public static In createIn(SqlExpression<?> field, SqlExpression<?>... values) {
+    public static In in(SqlExpression<?> field, SqlExpression<?>... values) {
         return new In(field, values, false);
     }
 
-    public static In createNotIn(SqlExpression<?> field, SqlExpression<?>... values) {
+    public static In notIn(SqlExpression<?> field, SqlExpression<?>... values) {
         return new In(field, values, true);
     }
 

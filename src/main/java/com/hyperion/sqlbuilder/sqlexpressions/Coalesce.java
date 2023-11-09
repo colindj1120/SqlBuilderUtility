@@ -3,6 +3,7 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class Coalesce extends SqlExpression<Coalesce> {
     private final StringBuilder expression = new StringBuilder();
 
@@ -13,7 +14,7 @@ public class Coalesce extends SqlExpression<Coalesce> {
         this.expression.append(expressionString);
     }
 
-    public static Coalesce create(SqlExpression<?>... expressions) {
+    public static Coalesce coalesce(SqlExpression<?>... expressions) {
         return new Coalesce(expressions);
     }
 

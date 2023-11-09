@@ -16,12 +16,12 @@ public class LogicalGroup extends SqlExpression<LogicalGroup> {
     private LogicalGroup() {}
 
     // Static factory method to initiate an expression with a given SqlExpression.
-    public static LogicalGroup begin() {
+    public static LogicalGroup beginLogicalGroup() {
         return new LogicalGroup();
     }
 
     // Adds a new group to the logical expression.
-    public LogicalGroup groupAnd(SqlExpression<?>... expressions) {
+    public LogicalGroup andGroup(SqlExpression<?>... expressions) {
         String group = Arrays.stream(expressions)
                              .map(SqlExpression::render)
                              .collect(Collectors.joining(" AND "));
@@ -32,7 +32,7 @@ public class LogicalGroup extends SqlExpression<LogicalGroup> {
         return this;
     }
 
-    public LogicalGroup groupOr(SqlExpression<?>... expressions) {
+    public LogicalGroup orGroup(SqlExpression<?>... expressions) {
         String group = Arrays.stream(expressions)
                              .map(SqlExpression::render)
                              .collect(Collectors.joining(" OR "));

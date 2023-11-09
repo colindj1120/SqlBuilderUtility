@@ -10,11 +10,11 @@ public class Exists extends SqlExpression<Exists> {
         this.not = not;
     }
 
-    public static Exists createExists(Subquery subquery) {
+    public static Exists exists(Subquery subquery) {
         return new Exists(subquery, false);
     }
 
-    public static Exists createNotExists(Subquery subquery) {
+    public static Exists notExists(Subquery subquery) {
         return new Exists(subquery, true);
     }
 

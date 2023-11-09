@@ -19,19 +19,19 @@ public class Like extends SqlExpression<Like> {
         this.not        = not;
     }
 
-    public static Like createLike(SqlExpression<?> field, String pattern) {
+    public static Like like(SqlExpression<?> field, String pattern) {
         return new Like(field, pattern, null, false);
     }
 
-    public static Like createLike(SqlExpression<?> field, String pattern, String escapeChar) {
+    public static Like like(SqlExpression<?> field, String pattern, String escapeChar) {
         return new Like(field, pattern, escapeChar, false);
     }
 
-    public static Like createNotLike(SqlExpression<?> field, String pattern) {
+    public static Like notLike(SqlExpression<?> field, String pattern) {
         return new Like(field, pattern, null, true);
     }
 
-    public static Like createNotLike(SqlExpression<?> field, String pattern, String escapeChar) {
+    public static Like notLike(SqlExpression<?> field, String pattern, String escapeChar) {
         return new Like(field, pattern, escapeChar, true);
     }
 

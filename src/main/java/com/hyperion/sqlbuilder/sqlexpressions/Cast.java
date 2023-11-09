@@ -4,6 +4,7 @@ import com.hyperion.sqlbuilder.datatypes.ApacheDerby.DerbyDataType;
 
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public class Cast extends SqlExpression<Cast> {
     private final StringBuilder expression = new StringBuilder();
 
@@ -14,11 +15,11 @@ public class Cast extends SqlExpression<Cast> {
                        .append(castType.toString());
     }
 
-    public static Cast createNullCast(DerbyDataType castType) {
+    public static Cast nullCast(DerbyDataType castType) {
         return new Cast(null, castType);
     }
 
-    public static Cast createCast(SqlExpression<?> expression, DerbyDataType castType) {
+    public static Cast cast(SqlExpression<?> expression, DerbyDataType castType) {
         return new Cast(expression.render(), castType);
     }
 

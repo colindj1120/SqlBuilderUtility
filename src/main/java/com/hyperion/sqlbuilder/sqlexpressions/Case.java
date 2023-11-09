@@ -2,6 +2,7 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class Case extends SqlExpression<Case> {
     private final StringBuilder expression = new StringBuilder();
 
@@ -17,11 +18,11 @@ public class Case extends SqlExpression<Case> {
         }
     }
 
-    public static Case createWhenThenPair(SqlExpression<?> when, SqlExpression<?> then) {
+    public static Case whenThen(SqlExpression<?> when, SqlExpression<?> then) {
         return new Case(when, then, null);
     }
 
-    public static Case createElseCase(SqlExpression<?> elseCase) {
+    public static Case elseCase(SqlExpression<?> elseCase) {
         return new Case(null, null, elseCase);
     }
 

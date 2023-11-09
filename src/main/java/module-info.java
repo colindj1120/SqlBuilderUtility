@@ -1,5 +1,4 @@
 module com.hyperion {
-    exports com.hyperion.sqlbuilder.datatypes;
     exports com.hyperion.sqlbuilder.datatypes.ApacheDerby;
     exports com.hyperion.sqlbuilder.datatypes.SqlStandard;
     exports com.hyperion.sqlbuilder.builders;

@@ -1,9 +1,10 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
+@SuppressWarnings("unused")
 public class Default extends SqlExpression<Default> {
     private Default() {}
 
-    public static Default create() {
+    public static Default defaultExpr() {
         return new Default();
     }
 

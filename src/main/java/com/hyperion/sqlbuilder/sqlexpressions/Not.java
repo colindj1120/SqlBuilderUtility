@@ -7,7 +7,7 @@ public class Not extends SqlExpression<Not> {
         this.expression = expression;
     }
 
-    public static Not create(SqlExpression<?> expression) {
+    public static Not not(SqlExpression<?> expression) {
         return new Not(expression);
     }
 

@@ -19,7 +19,7 @@ public class QualifiedComparison extends SqlExpression<QualifiedComparison> {
         this.subquery = subquery;
     }
 
-    public static QualifiedComparison create(SqlExpression<?> left, Operator operator, Quantifier quantifier, Subquery subquery) {
+    public static QualifiedComparison qualifiedComparison(SqlExpression<?> left, Operator operator, Quantifier quantifier, Subquery subquery) {
         return new QualifiedComparison(left, operator, quantifier, subquery);
     }
 

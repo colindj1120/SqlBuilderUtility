@@ -20,7 +20,7 @@ public class OrderByExpression extends SqlExpression<OrderByExpression> {
         return new OrderByExpression(column, SortOrder.DESC);
     }
 
-    public static OrderByExpression col(Column column) {
+    public static OrderByExpression column(Column column) {
         return new OrderByExpression(column, SortOrder.NONE);
     }
 
