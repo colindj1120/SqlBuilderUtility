@@ -1,5 +1,6 @@
 package com.hyperion.sqlbuilder.datatypes.Join;
 
+@SuppressWarnings("unused")
 public interface MySqlJoin extends Join {
     MySqlJoin NATURAL_JOIN = () -> "NATURAL JOIN";
     MySqlJoin NATURAL_INNER_JOIN = () -> "NATURAL INNER JOIN";
