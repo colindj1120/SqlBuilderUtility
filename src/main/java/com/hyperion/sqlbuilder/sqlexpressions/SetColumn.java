@@ -2,6 +2,7 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 
 import com.hyperion.sqlbuilder.datatypes.SqlStandard.Operator;
 
+@SuppressWarnings("unused")
 public class SetColumn extends SqlExpression<SetColumn> {
     private final Column column;
     private final SqlExpression<?> expression;

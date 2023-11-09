@@ -2,6 +2,7 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 
 import com.hyperion.sqlbuilder.datatypes.SqlStandard.SortOrder;
 
+@SuppressWarnings("unused")
 public class OrderByExpression extends SqlExpression<OrderByExpression> {
     private final Column column;
     private final SortOrder sortOrder;

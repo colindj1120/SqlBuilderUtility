@@ -32,14 +32,14 @@ public class DerbyBuilder extends SqlBuilder<DerbyBuilder> {
         return this;
     }
 
-    public DerbyBuilder createColumn(String name, DerbyDataType type, DerbyConstraint... constraints) {
+    public DerbyBuilder createColumn(Column column, DerbyDataType type, DerbyConstraint... constraints) {
         if (builder.lastIndexOf("(\n") != builder.length() - 2 && builder.lastIndexOf("(\n") != -1) {
             builder.append(",\n");
         } else {
             builder.append(" (\n");
         }
         builder.append("\t")
-               .append(name)
+               .append(column.nameOnly())
                .append(" ")
                .append(type.toString());
 

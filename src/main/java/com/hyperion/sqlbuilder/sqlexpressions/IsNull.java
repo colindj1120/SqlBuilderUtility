@@ -2,6 +2,7 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 
 import com.hyperion.sqlbuilder.datatypes.SqlStandard.Operator;
 
+@SuppressWarnings("unused")
 public class IsNull extends SqlExpression<IsNull> {
     private final SqlExpression<?> expression;
     private final boolean not;

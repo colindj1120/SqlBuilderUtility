@@ -1,5 +1,6 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
+@SuppressWarnings("unused")
 public abstract class SqlExpression<T extends SqlExpression<T>> {
     public abstract String render();
 

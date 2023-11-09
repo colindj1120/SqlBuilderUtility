@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
  * @author Colin Jokisch
  * @version 1.1
  */
+@SuppressWarnings("unused")
 public class LogicalGroup extends SqlExpression<LogicalGroup> {
     private final StringBuilder expression = new StringBuilder();
     // Private constructor to prevent direct instantiation

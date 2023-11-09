@@ -1,8 +1,8 @@
 package com.hyperion.sqlbuilder.datatypes.ApacheDerby;
 
 public enum DerbyOnUpdate implements DerbyReferenceClause {
-    NO_ACTION("NO ACTION"),
-    RESTRICT("RESTRICT");
+    ON_UPDATE_NO_ACTION("NO ACTION"),
+    ON_UPDATE_RESTRICT("RESTRICT");
 
     private final String action;
 

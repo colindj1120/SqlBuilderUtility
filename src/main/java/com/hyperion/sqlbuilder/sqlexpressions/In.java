@@ -3,6 +3,7 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class In extends SqlExpression<In> {
     private final SqlExpression<?> field;
     private final SqlExpression<?>[] values;

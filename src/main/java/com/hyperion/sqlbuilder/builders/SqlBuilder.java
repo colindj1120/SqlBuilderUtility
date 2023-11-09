@@ -29,9 +29,10 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     //TODO: CREATE TABLE "" AS (subquery) WITH NO DATA (derby specific maybe)
-    public T createTable(Table tableName) {
+    public T createTable(Table table) {
         builder.append("CREATE TABLE ")
-               .append(tableName.render());
+               .append(table.nameOnly()
+                            .render());
         return self();
     }
 
@@ -52,7 +53,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return select(Column.all());
     }
 
-    public T select(SqlExpression... expressions) {
+    public T select(SqlExpression<?>... expressions) {
         builder.append("SELECT ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
@@ -62,7 +63,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     // Method to select distinct columns or expressions
-    public T selectDistinct(SqlExpression... expressions) {
+    public T selectDistinct(SqlExpression<?>... expressions) {
         builder.append("SELECT DISTINCT ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
@@ -85,7 +86,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T join(JoinDefinition joinDef, SqlExpression tableExpression) {
+    public T join(JoinDefinition joinDef, SqlExpression<?> tableExpression) {
         builder.append("\n")
                .append(joinDef.getSql())
                .append(" ")
@@ -93,7 +94,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T on(SqlExpression joinCondition) {
+    public T on(SqlExpression<?> joinCondition) {
         if (joinCondition != null) {
             builder.append(" ON ")
                    .append(joinCondition.render());
@@ -112,7 +113,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T where(SqlExpression expression) {
+    public T where(SqlExpression<?> expression) {
         builder.append("\nWHERE ")
                .append(expression.render());
         return self();
@@ -148,7 +149,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     // Method for HAVING clause
-    public T having(SqlExpression condition) {
+    public T having(SqlExpression<?> condition) {
         builder.append("\nHAVING ")
                .append(condition.render());
         return self();
@@ -203,10 +204,12 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
 
     public T insertInto(Table tableName, Column... columns) {
         builder.append("INSERT INTO ")
-               .append(tableName.render());
+               .append(tableName.nameOnly()
+                                .render());
         if (columns.length > 0) {
             builder.append(" (")
                    .append(Arrays.stream(columns)
+                                 .map(Column::nameOnly)
                                  .map(Column::render)
                                  .collect(Collectors.joining(", ")))
                    .append(")");

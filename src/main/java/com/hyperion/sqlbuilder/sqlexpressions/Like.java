@@ -5,6 +5,7 @@ import java.util.Optional;
 /**
  * Represents a SQL LIKE expression with an optional escape character.
  */
+@SuppressWarnings("unused")
 public class Like extends SqlExpression<Like> {
     private final SqlExpression<?> field;
     private final String        pattern;

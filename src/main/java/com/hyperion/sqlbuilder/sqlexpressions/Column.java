@@ -3,6 +3,7 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 import java.util.Objects;
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public class Column extends SqlExpression<Column> {
     private final String columnName;
     private final String alias;
@@ -65,15 +66,15 @@ public class Column extends SqlExpression<Column> {
         return alias;
     }
 
-    public Column onlyName() {
+    public Column nameOnly() {
         return new Column(this.columnName, null, null);
     }
 
-    public Column onlyAlias() {
+    public Column aliasOnly() {
         return new Column(this.alias, null, null);
     }
 
-    public Column withoutAlias() {
+    public Column nameWithReference() {
         return new Column(this.columnName, null, this.reference);
     }
 }

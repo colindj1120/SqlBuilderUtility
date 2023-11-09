@@ -5,6 +5,7 @@ import com.hyperion.sqlbuilder.datatypes.SqlStandard.Operator;
 /**
  * Class representing an SQL expression using operators.
  */
+@SuppressWarnings("unused")
 public class Comparison extends SqlExpression<Comparison> {
     private final SqlExpression<?> leftOperand;
     private final Operator operator;

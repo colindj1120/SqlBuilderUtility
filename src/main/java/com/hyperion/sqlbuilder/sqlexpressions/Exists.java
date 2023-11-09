@@ -1,5 +1,6 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
+@SuppressWarnings("unused")
 public class Exists extends SqlExpression<Exists> {
     private final Subquery subquery;
     private final boolean not;

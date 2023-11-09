@@ -4,12 +4,12 @@ import com.hyperion.sqlbuilder.datatypes.JoinDefinition;
 
 public enum StandardJoin implements JoinDefinition {
     JOIN("JOIN"),
-    INNER("INNER JOIN"),
-    LEFT("LEFT JOIN"),
-    LEFT_OUTER("LEFT OUTER JOIN"),
-    RIGHT("RIGHT JOIN"),
-    RIGHT_OUTER("RIGHT OUTER JOIN"),
-    CROSS("CROSS JOIN");
+    INNER_JOIN("INNER JOIN"),
+    LEFT_JOIN("LEFT JOIN"),
+    LEFT_OUTER_JOIN("LEFT OUTER JOIN"),
+    RIGHT_JOIN("RIGHT JOIN"),
+    RIGHT_OUTER_JOIN("RIGHT OUTER JOIN"),
+    CROSS_JOIN("CROSS JOIN");
 
     private final String sql;
 

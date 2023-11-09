@@ -1,10 +1,13 @@
 package com.hyperion.sqlbuilder.datatypes.ApacheDerby;
 
+import com.hyperion.sqlbuilder.sqlexpressions.Column;
 import com.hyperion.sqlbuilder.sqlexpressions.SqlExpression;
+import com.hyperion.sqlbuilder.sqlexpressions.Table;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class DerbyConstraint {
     private String constraint;
 
@@ -13,21 +16,29 @@ public class DerbyConstraint {
     }
 
     // Factory method for creating a new DerbyConstraint instance
-    public static DerbyConstraint create(Type type) {
+    public static DerbyConstraint constraint(Type type) {
         return new DerbyConstraint(type.name()
                                        .replace("_", " "));
+    }
+
+    public static DerbyConstraint constraints(Type... types) {
+        String constraint = Arrays.stream(types)
+                                  .map(type -> type.name()
+                                                   .replace("_", " "))
+                                  .collect(Collectors.joining(" "));
+        return new DerbyConstraint(constraint);
     }
 
     public String toString() {
         return constraint;
     }
 
-    public DerbyConstraint checkExpression(SqlExpression expression) {
+    public DerbyConstraint checkExpression(SqlExpression<?> expression) {
         constraint += String.format(" (%s)", expression.render());
         return this;
     }
 
-    public DerbyConstraint defaultExpression(SqlExpression expression) {
+    public DerbyConstraint defaultExpression(SqlExpression<?> expression) {
         constraint += String.format(" %s", expression.render());
         return this;
     }
@@ -37,14 +48,20 @@ public class DerbyConstraint {
         return this;
     }
 
-    public DerbyConstraint columns(String... columnNames) {
-        constraint += String.format(" (%s)", String.join(", ", columnNames));
+    public DerbyConstraint columns(Column... columns) {
+        constraint += String.format(" (%s)", Arrays.stream(columns)
+                                                   .map(Column::nameOnly)
+                                                   .map(Column::render)
+                                                   .collect(Collectors.joining(", ")));
         return this;
     }
 
     // A method to define the specifics of a foreign key constraint
-    public DerbyConstraint references(String referenceTable, String... referenceColumns) {
-        constraint += String.format(" REFERENCES %s(%s)", referenceTable, String.join(", ", referenceColumns));
+    public DerbyConstraint references(Table referenceTable, Column... referenceColumns) {
+        constraint += String.format(" REFERENCES %s(%s)", referenceTable.nameOnly(), Arrays.stream(referenceColumns)
+                                                                                           .map(Column::nameOnly)
+                                                                                           .map(Column::render)
+                                                                                           .collect(Collectors.joining(", '")));
         return this;
     }
 
