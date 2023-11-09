@@ -1,10 +1,12 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
 public class Exists extends SqlExpression<Exists> {
+    private final Subquery subquery;
+    private final boolean not;
+
     private Exists(Subquery subquery, boolean not) {
-        super();
-        this.expression.append(not ? "NOT EXISTS " : "EXISTS ")
-                       .append(subquery.render());
+        this.subquery = subquery;
+        this.not = not;
     }
 
     public static Exists createExists(Subquery subquery) {
@@ -16,7 +18,12 @@ public class Exists extends SqlExpression<Exists> {
     }
 
     @Override
-    protected Exists self() {
+    public String render() {
+        return String.format("%s %s", not ? "NOT EXISTS" : "EXISTS", subquery.render());
+    }
+
+    @Override
+    public Exists self() {
         return this;
     }
 }

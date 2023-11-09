@@ -1,17 +1,19 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
 public class ParameterPlaceholder extends SqlExpression<ParameterPlaceholder> {
-    private ParameterPlaceholder() {
-        super();
-        this.expression.append("?");
-    }
+    private ParameterPlaceholder() {}
 
-    public static ParameterPlaceholder create() {
+    public static ParameterPlaceholder get() {
         return new ParameterPlaceholder();
     }
 
     @Override
-    protected ParameterPlaceholder self() {
+    public String render() {
+        return "?";
+    }
+
+    @Override
+    public ParameterPlaceholder self() {
         return this;
     }
 }

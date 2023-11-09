@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class Coalesce extends SqlExpression<Coalesce> {
-    private Coalesce(SqlExpression<?>[] expressions) {
-        super();
+    private final StringBuilder expression = new StringBuilder();
 
+    private Coalesce(SqlExpression<?>[] expressions) {
         String expressionString = Arrays.stream(expressions)
                                         .map(SqlExpression::render)
                                         .collect(Collectors.joining(", "));
@@ -18,7 +18,12 @@ public class Coalesce extends SqlExpression<Coalesce> {
     }
 
     @Override
-    protected Coalesce self() {
+    public String render() {
+        return expression.toString();
+    }
+
+    @Override
+    public Coalesce self() {
         return this;
     }
 }

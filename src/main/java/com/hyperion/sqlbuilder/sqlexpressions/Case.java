@@ -3,9 +3,9 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 import java.util.Objects;
 
 public class Case extends SqlExpression<Case> {
-    private Case(SqlExpression<?> when, SqlExpression<?> then, SqlExpression<?> elseCase) {
-        super();
+    private final StringBuilder expression = new StringBuilder();
 
+    private Case(SqlExpression<?> when, SqlExpression<?> then, SqlExpression<?> elseCase) {
         if (Objects.isNull(when) || Objects.isNull(then)) {
             this.expression.append("ELSE ")
                            .append(elseCase.render());
@@ -26,7 +26,12 @@ public class Case extends SqlExpression<Case> {
     }
 
     @Override
-    protected Case self() {
+    public String render() {
+        return expression.toString();
+    }
+
+    @Override
+    public Case self() {
         return this;
     }
 }

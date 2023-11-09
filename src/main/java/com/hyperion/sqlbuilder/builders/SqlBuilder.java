@@ -52,7 +52,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return select(Column.all());
     }
 
-    public T select(SqlExpression<?>... expressions) {
+    public T select(SqlExpression... expressions) {
         builder.append("SELECT ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
@@ -62,7 +62,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     // Method to select distinct columns or expressions
-    public T selectDistinct(SqlExpression<?>... expressions) {
+    public T selectDistinct(SqlExpression... expressions) {
         builder.append("SELECT DISTINCT ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
@@ -85,7 +85,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T join(JoinDefinition joinDef, SqlExpression<?> tableExpression) {
+    public T join(JoinDefinition joinDef, SqlExpression tableExpression) {
         builder.append("\n")
                .append(joinDef.getSql())
                .append(" ")
@@ -93,7 +93,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T on(SqlExpression<?> joinCondition) {
+    public T on(SqlExpression joinCondition) {
         if (joinCondition != null) {
             builder.append(" ON ")
                    .append(joinCondition.render());
@@ -112,7 +112,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T where(SqlExpression<?> expression) {
+    public T where(SqlExpression expression) {
         builder.append("\nWHERE ")
                .append(expression.render());
         return self();
@@ -148,7 +148,7 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     // Method for HAVING clause
-    public T having(SqlExpression<?> condition) {
+    public T having(SqlExpression condition) {
         builder.append("\nHAVING ")
                .append(condition.render());
         return self();
@@ -219,22 +219,16 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T subqueryValue(Subquery expression) {
-        builder.append("\nVALUES ")
-               .append(expression.render());
-        return self();
-    }
-
-    public T values(Constant... expressions) {
+    public T values(SqlExpression<?>... expressions) {
         builder.append("\nVALUES ");
         String valueString = String.format("(%s)", Arrays.stream(expressions)
-                                                         .map(Constant::render)
+                                                         .map(SqlExpression::render)
                                                          .collect(Collectors.joining(", ")));
         builder.append(valueString);
         return self();
     }
 
-    public T groupedValues(Constant[]... expressions) {
+    public T groupedValues(SqlExpression<?>[]... expressions) {
         builder.append("\nVALUES ");
         String valueString = String.format("(%s)", Arrays.stream(expressions)
                                                          .map(expression -> String.format("(%s)", Arrays.stream(expression)

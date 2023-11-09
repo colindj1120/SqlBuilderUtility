@@ -10,10 +10,9 @@ import java.util.stream.Collectors;
  * @version 1.1
  */
 public class LogicalGroup extends SqlExpression<LogicalGroup> {
+    private final StringBuilder expression = new StringBuilder();
     // Private constructor to prevent direct instantiation
-    private LogicalGroup() {
-        super();
-    }
+    private LogicalGroup() {}
 
     // Static factory method to initiate an expression with a given SqlExpression.
     public static LogicalGroup begin() {
@@ -64,7 +63,12 @@ public class LogicalGroup extends SqlExpression<LogicalGroup> {
     }
 
     @Override
-    protected LogicalGroup self() {
+    public String render() {
+        return expression.toString();
+    }
+
+    @Override
+    public LogicalGroup self() {
         return this;
     }
 }

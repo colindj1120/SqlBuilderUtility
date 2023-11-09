@@ -1,10 +1,10 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
 public class Not extends SqlExpression<Not> {
+    private final SqlExpression<?> expression;
+
     private Not(SqlExpression<?> expression) {
-        super();
-        this.expression.append("NOT ")
-                       .append(expression.render());
+        this.expression = expression;
     }
 
     public static Not create(SqlExpression<?> expression) {
@@ -12,7 +12,13 @@ public class Not extends SqlExpression<Not> {
     }
 
     @Override
-    protected Not self() {
+    public String render() {
+        return String.format("NOT %s", expression.render());
+    }
+
+
+    @Override
+    public Not self() {
         return this;
     }
 }

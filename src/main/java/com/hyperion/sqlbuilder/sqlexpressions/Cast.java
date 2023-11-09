@@ -5,9 +5,9 @@ import com.hyperion.sqlbuilder.datatypes.ApacheDerby.DerbyDataType;
 import java.util.Optional;
 
 public class Cast extends SqlExpression<Cast> {
-    private Cast(String castObj, DerbyDataType castType) {
-        super();
+    private final StringBuilder expression = new StringBuilder();
 
+    private Cast(String castObj, DerbyDataType castType) {
         this.expression.append(Optional.ofNullable(castObj)
                                        .orElse("NULL"))
                        .append(" AS ")
@@ -23,7 +23,12 @@ public class Cast extends SqlExpression<Cast> {
     }
 
     @Override
-    protected Cast self() {
-        return this;
+    public String render() {
+        return expression.toString();
+    }
+
+    @Override
+    public Cast self() {
+        return null;
     }
 }

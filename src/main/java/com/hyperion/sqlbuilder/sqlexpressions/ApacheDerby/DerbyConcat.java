@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class DerbyConcat extends SqlExpression<DerbyConcat> {
+    private final String concatenatedParts;
+
     private DerbyConcat(String[] parts) {
-        super();
-        String concatenatedParts = Arrays.stream(parts)
-                                         .map(part -> "'" + part.replace("'", "''") + "'") // Handle single quotes in SQL
-                                         .collect(Collectors.joining(" || "));
-        this.expression.append(concatenatedParts);
+        this.concatenatedParts = Arrays.stream(parts)
+                                       .map(part -> "'" + part.replace("'", "''") + "'") // Handle single quotes in SQL
+                                       .collect(Collectors.joining(" || "));
     }
 
     public static DerbyConcat create(String... parts) {
@@ -19,7 +19,12 @@ public class DerbyConcat extends SqlExpression<DerbyConcat> {
     }
 
     @Override
-    protected DerbyConcat self() {
+    public String render() {
+        return concatenatedParts;
+    }
+
+    @Override
+    public DerbyConcat self() {
         return this;
     }
 }

@@ -3,21 +3,25 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 import com.hyperion.sqlbuilder.datatypes.SqlStandard.Operator;
 
 public class SetColumn extends SqlExpression<SetColumn> {
-    private SetColumn(String column, SqlExpression<?> expression) {
-        super();
-        this.expression.append(column)
-                       .append(" ")
-                       .append(Operator.EQUALS)
-                       .append(" ")
-                       .append(expression.render());
+    private final Column column;
+    private final SqlExpression<?> expression;
+
+    private SetColumn(Column column, SqlExpression<?> expression) {
+        this.column = column;
+        this.expression = expression;
     }
 
-    public static SetColumn set(String column, SqlExpression<?> expression) {
+    public static SetColumn set(Column column, SqlExpression<?> expression) {
         return new SetColumn(column, expression);
     }
 
     @Override
-    protected SetColumn self() {
+    public String render() {
+        return String.format("%s %s %s", column.render(), Operator.EQUALS, expression.render());
+    }
+
+    @Override
+    public SetColumn self() {
         return this;
     }
 }

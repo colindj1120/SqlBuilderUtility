@@ -3,10 +3,12 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 import com.hyperion.sqlbuilder.datatypes.SqlStandard.Operator;
 
 public class IsNull extends SqlExpression<IsNull> {
+    private final SqlExpression<?> expression;
+    private final boolean not;
+
     private IsNull(SqlExpression<?> expression, boolean not) {
-        super();
-        this.expression.append(expression)
-                       .append(not ? Operator.IS_NOT_NULL.getSymbol() : Operator.IS_NULL.getSymbol());
+        this.expression = expression;
+        this.not = not;
     }
 
     public static IsNull isNull(SqlExpression<?> expression) {
@@ -18,7 +20,12 @@ public class IsNull extends SqlExpression<IsNull> {
     }
 
     @Override
-    protected IsNull self() {
+    public String render() {
+        return String.format("%s %s", expression.render(), not ? Operator.IS_NOT_NULL.getSymbol() : Operator.IS_NULL.getSymbol());
+    }
+
+    @Override
+    public IsNull self() {
         return this;
     }
 }

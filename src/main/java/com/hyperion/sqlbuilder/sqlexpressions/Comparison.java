@@ -6,21 +6,27 @@ import com.hyperion.sqlbuilder.datatypes.SqlStandard.Operator;
  * Class representing an SQL expression using operators.
  */
 public class Comparison extends SqlExpression<Comparison> {
+    private final SqlExpression<?> leftOperand;
+    private final Operator operator;
+    private final SqlExpression<?> rightOperand;
+
     private Comparison(SqlExpression<?> leftOperand, Operator operator, SqlExpression<?> rightOperand) {
-        super();
-        this.expression.append(leftOperand.render())
-                       .append(" ")
-                       .append(operator.getSymbol())
-                       .append(" ")
-                       .append(rightOperand.render());
+        this.leftOperand = leftOperand;
+        this.operator = operator;
+        this.rightOperand = rightOperand;
     }
 
-    public static Comparison create(SqlExpression<?> leftOperand, Operator operator, SqlExpression<?> rightOperand) {
+    public static Comparison comparison(SqlExpression<?> leftOperand, Operator operator, SqlExpression<?> rightOperand) {
         return new Comparison(leftOperand, operator, rightOperand);
     }
 
     @Override
-    protected Comparison self() {
+    public String render() {
+        return String.format("%s %s %s", leftOperand.render(), operator.getSymbol(), rightOperand.render());
+    }
+
+    @Override
+    public Comparison self() {
         return this;
     }
 }

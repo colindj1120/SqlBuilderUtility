@@ -1,26 +1,38 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
+import java.util.Optional;
+
 public class Subquery extends SqlExpression<Subquery> {
-    private Subquery(String query) {
-        super();
-        this.expression.append("(")
-                       .append(query)
-                       .append(")");
+    private final String query;
+    private final String alias;
+
+    private Subquery(String query, String alias) {
+        this.query = query;
+        this.alias = alias;
     }
 
     public static Subquery query(String query) {
-        return new Subquery(query);
+        return new Subquery(query, null);
+    }
+
+    public static Subquery query(String query, String alias) {
+        return new Subquery(query, alias);
     }
 
     @Override
-    public Subquery as(String alias) {
-        this.expression.append(" AS ")
-                       .append(alias);
-        return self();
+    public String render() {
+        return Optional.ofNullable(alias)
+                       .map(alias -> String.format("(%s) AS %s", query, alias))
+                       .orElse(String.format("(%s)", query));
     }
 
     @Override
-    protected Subquery self() {
+    public Subquery alias(String alias) {
+        return new Subquery(this.query, alias);
+    }
+
+    @Override
+    public Subquery self() {
         return this;
     }
 }

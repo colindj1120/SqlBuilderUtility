@@ -7,15 +7,16 @@ import com.hyperion.sqlbuilder.datatypes.SqlStandard.Quantifier;
  * Represents a qualified comparison expression with SQL quantifiers.
  */
 public class QualifiedComparison extends SqlExpression<QualifiedComparison> {
+    private final SqlExpression<?> left;
+    private final Operator operator;
+    private final Quantifier quantifier;
+    private final Subquery subquery;
+
     private QualifiedComparison(SqlExpression<?> left, Operator operator, Quantifier quantifier, Subquery subquery) {
-        super();
-        this.expression.append(left.render())
-                       .append(" ")
-                       .append(operator.getSymbol())
-                       .append(" ")
-                       .append(quantifier.getKeyword())
-                       .append(" ")
-                       .append(subquery.render());
+        this.left = left;
+        this.operator = operator;
+        this.quantifier = quantifier;
+        this.subquery = subquery;
     }
 
     public static QualifiedComparison create(SqlExpression<?> left, Operator operator, Quantifier quantifier, Subquery subquery) {
@@ -23,7 +24,12 @@ public class QualifiedComparison extends SqlExpression<QualifiedComparison> {
     }
 
     @Override
-    protected QualifiedComparison self() {
+    public String render() {
+        return String.format("%s %s %s %s", left.render(), operator.getSymbol(), quantifier.getKeyword(), subquery.render());
+    }
+
+    @Override
+    public QualifiedComparison self() {
         return this;
     }
 }

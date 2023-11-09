@@ -6,16 +6,16 @@ import java.util.Optional;
  * Represents a SQL LIKE expression with an optional escape character.
  */
 public class Like extends SqlExpression<Like> {
+    private final SqlExpression<?> field;
+    private final String        pattern;
+    private final String        escapeChar;
+    private final boolean       not;
+
     private Like(SqlExpression<?> field, String pattern, String escapeChar, boolean not) {
-        super();
-        String escape = Optional.ofNullable(escapeChar)
-                                .map(str -> String.format(" ESCAPE '%s'", escapeChar))
-                                .orElse("");
-        this.expression.append(field.render())
-                       .append(not ? " NOT LIKE '" : " LIKE '")
-                       .append(pattern)
-                       .append("'")
-                       .append(escape);
+        this.field      = field;
+        this.pattern    = pattern;
+        this.escapeChar = escapeChar;
+        this.not        = not;
     }
 
     public static Like createLike(SqlExpression<?> field, String pattern) {
@@ -35,7 +35,15 @@ public class Like extends SqlExpression<Like> {
     }
 
     @Override
-    protected Like self() {
+    public String render() {
+        String escape = Optional.ofNullable(escapeChar)
+                                .map(str -> String.format(" ESCAPE '%s'", escapeChar))
+                                .orElse("");
+        return String.format("%s %s '%s'%s", field.render(), not ? "NOT LIKE" : "LIKE", pattern, escape);
+    }
+
+    @Override
+    public Like self() {
         return this;
     }
 }

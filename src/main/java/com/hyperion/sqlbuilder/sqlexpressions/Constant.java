@@ -1,9 +1,10 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
 public class Constant extends SqlExpression<Constant> {
+    private final String constant;
+
     private Constant(String constant) {
-        super();
-        this.expression.append(constant);
+        this.constant = constant;
     }
 
     public static Constant createStrConst(String constant) {
@@ -19,7 +20,12 @@ public class Constant extends SqlExpression<Constant> {
     }
 
     @Override
-    protected Constant self() {
+    public String render() {
+        return constant;
+    }
+
+    @Override
+    public Constant self() {
         return this;
     }
 }

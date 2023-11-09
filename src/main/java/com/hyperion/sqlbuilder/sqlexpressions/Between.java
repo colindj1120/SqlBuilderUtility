@@ -1,9 +1,9 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
 public class Between extends SqlExpression<Between> {
-    private Between(SqlExpression<?> expression, SqlExpression<?> startRange, SqlExpression<?> endRange, boolean not) {
-        super();
+    private final StringBuilder expression = new StringBuilder();
 
+    private Between(SqlExpression<?> expression, SqlExpression<?> startRange, SqlExpression<?> endRange, boolean not) {
         this.expression.append(expression.render())
                        .append(not ? " NOT BETWEEN " : " BETWEEN ")
                        .append(startRange.render())
@@ -20,7 +20,12 @@ public class Between extends SqlExpression<Between> {
     }
 
     @Override
-    protected Between self() {
+    public String render() {
+        return expression.toString();
+    }
+
+    @Override
+    public Between self() {
         return this;
     }
 }
