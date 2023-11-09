@@ -1,5 +1,6 @@
 package com.hyperion.sqlbuilder.builders;
 
+import com.hyperion.sqlbuilder.datatypes.Join.JoinType;
 import com.hyperion.sqlbuilder.datatypes.JoinDefinition;
 import com.hyperion.sqlbuilder.sqlexpressions.*;
 
@@ -86,9 +87,9 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T join(JoinDefinition joinDef, SqlExpression<?> tableExpression) {
+    public T join(JoinType joinType, SqlExpression<?> tableExpression) {
         builder.append("\n")
-               .append(joinDef.getSql())
+               .append(joinType.getJoinTypeName())
                .append(" ")
                .append(tableExpression.render());
         return self();
@@ -186,14 +187,9 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
     }
 
     // Method to construct an UPDATE statement
-    public T update(Table table) {
+    public T update(Table table, SetColumn... expressions) {
         builder.append("UPDATE ")
                .append(table.render());
-        return self();
-    }
-
-    // Method to set values for an UPDATE statement
-    public T set(SetColumn... expressions) {
         builder.append("\nSET ");
         String renderedExpressions = Stream.of(expressions)
                                            .map(SqlExpression::render)
