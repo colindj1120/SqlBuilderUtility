@@ -3,6 +3,7 @@ package com.hyperion.sqlbuilder.builders;
 import com.hyperion.sqlbuilder.datatypes.ApacheDerby.DerbyConstraint;
 import com.hyperion.sqlbuilder.datatypes.ApacheDerby.DerbyDataType;
 import com.hyperion.sqlbuilder.sqlexpressions.Column;
+import com.hyperion.sqlbuilder.sqlexpressions.NextValueFor;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -56,18 +57,8 @@ public class DerbyBuilder extends SqlBuilder<DerbyBuilder> {
         return this;
     }
 
-    /**
-     * Appends a NEXT VALUE FOR clause for a sequence in an SQL statement.
-     *
-     * @param sequenceName
-     *         the name of the sequence
-     *
-     * @return the current instance of the SQL builder for method chaining
-     */
-    public DerbyBuilder nextValueFor(String sequenceName) {
-        //TODO: make a next value for expression because it can be used inside a values statement
-        builder.append("NEXT VALUE FOR ")
-               .append(sequenceName);
+    public DerbyBuilder nextValueFor(NextValueFor nextValueFor) {
+        builder.append(nextValueFor.render());
         return this;
     }
 
@@ -107,6 +98,11 @@ public class DerbyBuilder extends SqlBuilder<DerbyBuilder> {
      */
     public DerbyBuilder forFetchOnly() {
         builder.append(" FOR FETCH ONLY");
+        return this;
+    }
+
+    public DerbyBuilder whereCurrentOf(String cursorName) {
+        builder.append("\nWHERE CURRENT OF ").append(cursorName);
         return this;
     }
 }

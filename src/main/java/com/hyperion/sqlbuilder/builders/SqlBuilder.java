@@ -72,17 +72,9 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    /**
-     * Appends a FROM clause to the SQL query.
-     *
-     * @param table
-     *         the table name to select from
-     *
-     * @return the current instance of the SQL builder for method chaining
-     */
-    public T from(Table table) {
+    public T from(SqlExpression<?> expression) {
         builder.append("\nFROM ")
-               .append(table.render());
+               .append(expression.render());
         return self();
     }
 
@@ -212,28 +204,8 @@ public abstract class SqlBuilder<T extends SqlBuilder<T>> {
         return self();
     }
 
-    public T defaultValues() {
-        builder.append(" DEFAULT VALUES");
-        return self();
-    }
-
-    public T values(SqlExpression<?>... expressions) {
-        builder.append("\nVALUES ");
-        String valueString = String.format("(%s)", Arrays.stream(expressions)
-                                                         .map(SqlExpression::render)
-                                                         .collect(Collectors.joining(", ")));
-        builder.append(valueString);
-        return self();
-    }
-
-    public T groupedValues(SqlExpression<?>[]... expressions) {
-        builder.append("\nVALUES ");
-        String valueString = String.format("(%s)", Arrays.stream(expressions)
-                                                         .map(expression -> String.format("(%s)", Arrays.stream(expression)
-                                                                                                        .map(SqlExpression::render)
-                                                                                                        .collect(Collectors.joining(", "))))
-                                                         .collect(Collectors.joining(", ")));
-        builder.append(valueString);
+    public T values(Values values) {
+        builder.append("\n").append(values.render());
         return self();
     }
 

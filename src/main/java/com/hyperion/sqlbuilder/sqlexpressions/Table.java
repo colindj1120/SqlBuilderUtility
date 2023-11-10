@@ -5,10 +5,10 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 public class Table extends SqlExpression<Table> {
     private final String tableName;
-    private final String correlation;
+    protected final String correlation;
     private final String alias;
 
-    private Table(String tableName, String correlation, String alias) {
+    protected Table(String tableName, String correlation, String alias) {
         this.tableName   = tableName;
         this.correlation = correlation;
         this.alias       = alias;
