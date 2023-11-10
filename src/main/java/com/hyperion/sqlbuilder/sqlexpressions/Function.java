@@ -1,6 +1,6 @@
 package com.hyperion.sqlbuilder.sqlexpressions;
 
-import com.hyperion.sqlbuilder.functionproviders.SqlFunctionProvider;
+import com.hyperion.sqlbuilder.functions.SqlFunctionProvider;
 
 import java.util.Optional;
 

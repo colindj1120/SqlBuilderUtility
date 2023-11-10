@@ -2,6 +2,7 @@ package com.hyperion.sqlbuilder.sqlexpressions;
 
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public class Table extends SqlExpression<Table> {
     private final String tableName;
     private final String correlation;
@@ -17,8 +18,12 @@ public class Table extends SqlExpression<Table> {
         return new Table(tableName, null, null);
     }
 
-    public static Table name(String tableName, String correlationOrAlias, boolean isAlias) {
-        return isAlias ? new Table(tableName, null, correlationOrAlias) : new Table(tableName, correlationOrAlias, null);
+    public static Table nameWithCorrelation(String tableName, String correlation) {
+        return new Table(tableName, null, correlation);
+    }
+
+    public static Table nameWithAlias(String tableName, String alias) {
+        return new Table(tableName, alias, null);
     }
 
     @Override

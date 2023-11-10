@@ -65,6 +65,7 @@ public class DerbyBuilder extends SqlBuilder<DerbyBuilder> {
      * @return the current instance of the SQL builder for method chaining
      */
     public DerbyBuilder nextValueFor(String sequenceName) {
+        //TODO: make a next value for expression because it can be used inside a values statement
         builder.append("NEXT VALUE FOR ")
                .append(sequenceName);
         return this;
