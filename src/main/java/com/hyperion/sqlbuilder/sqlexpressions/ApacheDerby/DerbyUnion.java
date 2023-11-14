@@ -4,6 +4,9 @@ import com.hyperion.sqlbuilder.sqlexpressions.Query;
 import com.hyperion.sqlbuilder.sqlexpressions.SqlExpression;
 import com.hyperion.sqlbuilder.sqlexpressions.Values;
 
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.IntStream;
+
 @SuppressWarnings("unused")
 public class DerbyUnion extends SqlExpression<DerbyUnion> {
     private final StringBuilder unionBuilder = new StringBuilder();
@@ -41,12 +44,14 @@ public class DerbyUnion extends SqlExpression<DerbyUnion> {
     }
 
     private DerbyUnion append(SqlExpression<?> values) {
-        unionBuilder.append("\n").append(values.render());
+        unionBuilder.append("\n")
+                    .append(values.render());
         return this;
     }
 
     private DerbyUnion append(String unionType) {
-        unionBuilder.append("\n").append(unionType);
+        unionBuilder.append("\n")
+                    .append(unionType);
         return this;
     }
 
@@ -58,6 +63,21 @@ public class DerbyUnion extends SqlExpression<DerbyUnion> {
     @Override
     public String render() {
         if (unionBuilder.isEmpty()) {
+            int[]                    array    = {3, 5, -2, -3};
+            AtomicReference<Integer> sum      = new AtomicReference<>(IntStream.of(array)
+                                                                               .sum());
+            IntStream.range(0, array.length)
+                     .forEach(i -> {
+                         int temp      = 0;
+
+                         while (i < array.length) {
+                             temp += array[i];
+                             if (temp > sum.get()) {
+                                 sum.set(temp);
+                             }
+                             i++;
+                         }
+                     });
             throw new IllegalStateException("No queries added to UNION operation.");
         }
 
