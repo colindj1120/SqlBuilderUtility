@@ -1,13 +1,107 @@
 plugins {
     id 'java'
+    id 'signing'
+    id 'maven-publish'
 }
 
-group = 'com.hyperion'
-version = '1.0-SNAPSHOT'
+group = "${projectGroup}"
+version = "${projectVersion}"
+
+java {
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.windowTitle = "${javadocTitle}"
+    options.docTitle = "${javadocTitle}"
+    options.header = "${javadocTitle}"
+}
+
 
 repositories {
     mavenCentral()
 }
+
+tasks.register('javadocJar', Jar) {
+    archiveClassifier.set('javadoc')
+    from javadoc
+}
+
+tasks.register('sourcesJar', Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allJava
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = "${projectGroup}"
+            artifactId = "${projectArtifactId}"
+            version = "${projectVersion}"
+
+            from components.java
+            artifact tasks.javadocJar
+            artifact tasks.sourcesJar
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = "${projectName}"
+                description = """
+                              A utility project to allows you to build sql strings to avoid common typos when hardcoded to a string.
+                              It is currently geared towards apache derby syntax. However future releases plan to include other SQL DBMS  
+                              """
+                url = "${githubUrl}"
+                licenses {
+                    license {
+                        name = 'GNU General Public License v3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'colindj1120'
+                        name = 'Colin Jokisch'
+                        email = 'colindj1120@gmail.com'
+                    }
+                }
+                scm {
+                    connection = "${scmConnection}"
+                    developerConnection = "${scmConnection}"
+                    url = "${githubUrl}"
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = System.getenv('MAVEN_CENTRAL_USERNAME')
+                password = System.getenv('MAVEN_CENTRAL_PASSWORD')
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
@@ -25,14 +119,23 @@ File utilityLocation = file("C:\\IntelliJ Workspace\\UtilityJars")
 
 // Configure the main jar task
 jar {
-    archiveBaseName.set('SqlBuilder')
-    archiveVersion.set('0.1.0')
+    archiveBaseName.set("${projectArtifactId}")
+    archiveVersion.set("${projectVersion}")
     destinationDirectory.set(buildDir)
 
 // Include all compile and runtime dependencies in the JAR
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    manifest {
+        attributes(
+                'Implementation-Title': "${projectName}",
+                'Implementation-Version': "${projectVersion}",
+                'Main-Class': 'io.github.colindj1120.main.Main',
+                'Automatic-Module-Name': "${projectAutomaticModuleName}",
+        )
     }
 }
 
@@ -52,6 +155,6 @@ tasks.register('copyJarToSecondLocation', Copy) {
 
 // Task that depends on the two copy tasks
 tasks.register('copyJars') {
-    dependsOn ('copyJarToFirstLocation')
-    dependsOn ('copyJarToSecondLocation')
+    dependsOn('copyJarToFirstLocation')
+    dependsOn('copyJarToSecondLocation')
 }
